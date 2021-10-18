@@ -12,17 +12,16 @@ import (
 type Product struct {
 	ID          int    `gorm:"primary_key;not null"`
 	ProductName string `gorm:"type varchar(200);not null"`
-	Memo        string `gprm:"type:varchar(400);not null"`
+	Memo        string `gorm:"type:varchar(400);not null"`
 	Status      string `gorm:"type:char(2);not null"`
 }
 
 func gormConnect() *gorm.DB {
 	DBMS := "mysql"
 	USER := "root"
-	PASS := "root"
-	DBNAME := "shopping"
+	DBNAME := "Shopping"
 	PROTOCOL := "tcp(localhost:3306)"
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+	CONNECT := USER + ":" + "@" + PROTOCOL + "/" + DBNAME
 	db, err := gorm.Open(DBMS, CONNECT)
 
 	if err != nil {
@@ -79,7 +78,7 @@ func main() {
 	resultProducts := getAllProduct()
 
 	for i := range resultProducts {
-		fmr.Printlf("index: %d, 商品ID: %d, 商品名: %s, メモ: %s, ステータス: %s\n",
+		fmt.Printf("index: %d, 商品ID: %d, 商品名: %s, メモ: %s, ステータス: %s\n",
 			i, resultProducts[i].ID, resultProducts[i].ProductName, resultProducts[i].Memo, resultProducts[i].Status)
 	}
 
