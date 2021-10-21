@@ -64,6 +64,7 @@ func FindProduct(productID int) []entity.Product {
 func InsertProduct(registerProduct *entity.Product) {
 	db := gormConnect()
 
+	// insert
 	db.Create(&registerProduct)
 	defer db.Close()
 }
@@ -74,7 +75,7 @@ func UpdateStateProduct(productID int, productState int) {
 
 	db := gormConnect()
 
-	db.Model(&product).Where("ID = ?", productID).Update("State", productState)
+	db.Model(&product).Where("ID = ?", productID).Update("status", productState)
 	defer db.Close()
 }
 

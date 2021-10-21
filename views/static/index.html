@@ -19,6 +19,7 @@
             <h1>お買い物リスト</h1>
 
             <!-- 検索条件 -->
+            <!--  options配列をこのHTML内ではlabelという名で使用すると宣言している-->
             <label v-for="label in options">
                  <input type="radio" v-model="current" v-bind:value="label.value">{{ label.label }}
             </label>

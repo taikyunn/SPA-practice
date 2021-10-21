@@ -41,9 +41,9 @@ func AddProduct(c *gin.Context) {
 	productMemo := c.PostForm("productMemo")
 
 	var product = entity.Product{
-		Name:  productName,
-		Memo:  productMemo,
-		State: NotPurchased,
+		ProductName: productName,
+		Memo:        productMemo,
+		Status:      NotPurchased,
 	}
 
 	db.InsertProduct(&product)
