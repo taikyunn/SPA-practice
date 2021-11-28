@@ -21,6 +21,7 @@
             <!-- 検索条件 -->
             <!--  options配列をこのHTML内ではlabelという名で使用すると宣言している-->
             <label v-for="label in options">
+                <!-- ここでoptionsを繰り返し表示してあげてる。 -->
                  <input type="radio" v-model="current" v-bind:value="label.value">{{ label.label }}
             </label>
             <p>品名：<input type="text" name='productName' v-model="productName" v-bind:class="{'alert-color': !validate }" value='' size="40" placeholder="品名を入力してください※必須"></p>
@@ -49,6 +50,7 @@
                         <td class="memo">{{ item.memo }}</td>
                         <td class="state">
                             <!-- 状態変更ボタン -->
+                            <!-- (item)はproductsの一つ。引数としてvueに飛ばす -->
                             <button v-on:click="doChangeProductState(item)">
                                 {{ labels[item.state] }}
                             </button>

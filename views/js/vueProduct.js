@@ -27,7 +27,11 @@ new Vue({
   computed: {
       // 商品情報の状態一覧を表示する
       labels() {
+          // reduceメソッド：配列の要素を一つずつ取り出し、指定した処理を行なっていき最終的に一つの値を返す関数
+          // a:アキュムレータb:現在値
+          // b:optionsの中身をさしていそう。
           return this.options.reduce(function (a, b) {
+              // Object.assignメソッド：全ての列挙可能な自身のプロパティの値を1つ以上コピー元オブジェクトからコピー先オブジェクトにコピーする
               return Object.assign(a, { [b.value]: b.label })
           }, {})
       },
@@ -47,6 +51,7 @@ new Vue({
   },
 
   // インスタンス作成時の処理
+  // インスタンスが作成された後き同期的に呼ばれる。マウンティングの前に実行される
   created: function() {
       this.doFetchAllProducts()
   },
@@ -60,6 +65,7 @@ new Vue({
               if (response.status != 200) {
                   throw new Error('レスポンスエラー')
               } else {
+                  // 取得してきた値をresultProductsにおく
                   var resultProducts = response.data
 
                   // サーバから取得した商品情報をdataに設定する
@@ -69,6 +75,8 @@ new Vue({
       },
       // １つの商品情報を取得する
       doFetchProduct(product) {
+          // 送られてきたproduct.idを元にDBデータを取得してくる
+          // 今回はデータの更新をdoChangeProductStateで行なったので、更新したデータを再度取得し直して返す。
           axios.get('/fetchProduct', {
               params: {
                   productID: product.id
@@ -78,12 +86,23 @@ new Vue({
               if (response.status != 200) {
                   throw new Error('レスポンスエラー')
               } else {
+                  // 取得してきたデータを含め諸々を一度resultProductという変数に定義
                   var resultProduct = response.data
 
                   // 選択された商品情報のインデックスを取得する
+                  // インデックスは表のNoのこと。つまり表の何番に再描画するかの指定をする
                   var index = this.products.indexOf(product)
 
                   // spliceを使うとdataプロパティの配列の要素をリアクティブに変更できる
+                  // resultProduct[0]はデータベースに登録された値を表示している。
+                  // this.productsは2つの配列が用意されている。1つめは今登録した値を取得してきた時の値。二つ目は表全体の値を保持している
+
+                  // spliceは既存の要素を取り除いたり置き換えたり、新しく追加したりすることができる。
+                  // spliceは
+                  // 第一引数：変更したい配列の位置の指定。
+                  // 第二引数：消す要素数
+                  // 第三引数：変更要素
+                  console.log(this.products)
                   this.products.splice(index, 1, resultProduct[0])
               }
           })
@@ -112,14 +131,20 @@ new Vue({
       doChangeProductState(product) {
           // サーバへ送信するパラメータ
           const params = new URLSearchParams();
+          //product.idでパラメータ情報のidにアクセスできる
           params.append('productID', product.id)
+          //product.stateでパラメータ情報のstateにアクセスできる
           params.append('productState', product.state)
 
+          // postメソッドで送信。第一引数が送信先のURL。第二引数がパラメータ
+          // ここで商品状態を変更しDBに登録する
           axios.post('/changeStateProduct', params)
+          // レスポンスが返ってきた後の処理
           .then(response => {
               if (response.status != 200) {
                   throw new Error('レスポンスエラー')
               } else {
+                  // productには状態変更に使用したデータ情報が入っている。
                   // 商品情報を取得する
                   this.doFetchProduct(product)
               }
